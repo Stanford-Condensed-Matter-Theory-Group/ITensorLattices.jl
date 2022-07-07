@@ -35,7 +35,7 @@ function get_coords(lattice::Lattice)
     # create array or coordinates indexed by the site index
     indices = keys(dict)
     maxidx = maximum(indices)
-    coordlist = Vector(undef, maxidx)
+    coordlist = Vector{Tuple{Real, Real}}(undef, maxidx)
     for (idx, coords) in dict
         coordlist[idx] = coords
     end

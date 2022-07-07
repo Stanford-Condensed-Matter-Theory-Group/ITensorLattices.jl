@@ -6,7 +6,8 @@ function build_chain_lattice(n::Int; periodic = false, neighbor = 1)
     chain = Lattice(undef, nbonds)
 
     for i in 1:nbonds
-    chain[i] = LatticeBond(i, ((i + neighbor - 1) % n) + 1)
+        nexti = ((i + neighbor - 1) % n) + 1
+        chain[i] = LatticeBond(i, nexti, i, 0, nexti, 0)
     end
 
     return chain
@@ -53,12 +54,11 @@ function build_honeycomb_lattice(nx::Int, ny::Int; yperiodic::Bool=false, neighb
     @assert neighbor == 1 "Only handles neighbor = 1"
 
     getidx(x, y) = (x - 1) * ny + y
-    wrap(x, k) = ((x % k) + k) % k
+    wrap(x, k) = mod1(mod1(x, k) + k, k)
 
     function getcoords(x, y)
-        xsteps = [0, 1/2, 3/2]
-        xcoord = ((x - 1) ÷ 3) * 2 + xsteps[mod1(x, 3)]
-        ycoord = y - 1 + (mod1(x, 3) == 1 ? sqrt(3) / 2 : 0)
+        xcoord = (x - 1) * 3/4 + ((x % 2) == 0 ? -1/4 : 0)
+        ycoord = (y - 1) * sqrt(3) + ((x ÷ 2) % 2 == 0 ? sqrt(3) / 2 : 0)
         return xcoord, ycoord
     end
 
@@ -67,7 +67,7 @@ function build_honeycomb_lattice(nx::Int, ny::Int; yperiodic::Bool=false, neighb
     function bond!(x1, y1, x2, y2)
         idx1 = getidx(x1, y1)
         idx2 = getidx(x2, y2)
-        x1coord, y1coord = getcoords(x1, x2)
+        x1coord, y1coord = getcoords(x1, y1)
         x2coord, y2coord = getcoords(x2, y2)
         push!(lattice, LatticeBond(idx1, idx2, x1coord, y1coord, x2coord, y2coord))
     end
@@ -79,7 +79,6 @@ function build_honeycomb_lattice(nx::Int, ny::Int; yperiodic::Bool=false, neighb
 
             # Alternate between linking up and linking down on odd rows
             if x % 2 == 1
-                # alternate between bonding up a leg or down a leg
                 crossy = y + ((x ÷ 2) % 2 == 0 ? 1 : -1)
                 if crossy ∈ 1:ny
                     bond!(x, y, x + 1, crossy)
