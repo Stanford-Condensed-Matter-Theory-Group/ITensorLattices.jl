@@ -2,11 +2,25 @@
 export visualize
 
 """
-Visualize ITensor Lattice
-
-TODO: explore better visualizations
+Visualize ITensor lattice
+Keyword arguments are GraphRecipes arguments: https://docs.juliaplots.org/stable/generated/graph_attributes/
 """
-function visualize(lattice::Lattice)
+function visualize(lattice::Lattice; use_lattice_coords=true, kwargs...)
+    defaultargs = (
+        curves=false,
+        curvature_scalar=0.2,
+        nodesize=0.3,
+        nodeshape=:circle
+    )
+
     graph = build_graph(lattice)
-    gplot(graph)
+
+    if use_lattice_coords
+        coords = get_coords(lattice)
+        x = [coord[1] for coord in coords]
+        y = [coord[2] for coord in coords]
+        graphplot(graph; x, y, defaultargs..., kwargs...)
+    else
+        graphplot(graph; defaultargs..., kwargs...)
+    end
 end

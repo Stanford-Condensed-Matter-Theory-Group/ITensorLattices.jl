@@ -1,9 +1,10 @@
 
 module ITensorLattices
 
-    using ITensors
     using Graphs
-    using GraphPlot
+    using GraphRecipes
+    using ITensors
+    using Plots
 
     include("lattices.jl")
     include("graphs.jl")
