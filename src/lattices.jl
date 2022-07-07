@@ -18,7 +18,7 @@ function build_triangular_lattice(nx::Int, ny::Int; yperiodic::Bool=false, neigh
 
     if neighbor == 1
         # use ITensors lattice
-        return triangular_lattice(nx, ny, yperiodic=yperiodic)
+        return triangular_lattice(nx, ny; yperiodic)
     elseif neighbor == 2
         error("Not implemented!")
     else
@@ -31,7 +31,7 @@ function build_square_lattice(nx::Int, ny::Int; yperiodic::Bool=false, neighbor:
 
     if neighbor == 1
         # use ITensors lattice
-        return square_lattice(nx, ny, yperiodic=yperiodic)
+        return square_lattice(nx, ny; yperiodic)
     elseif neighbor == 2
         error("Not implemented!")
     else
