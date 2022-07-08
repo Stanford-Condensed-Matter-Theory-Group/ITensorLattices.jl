@@ -6,6 +6,11 @@ Visualize ITensor lattice
 Keyword arguments are GraphRecipes arguments: https://docs.juliaplots.org/stable/generated/graph_attributes/
 """
 function visualize(lattice::Lattice; use_lattice_coords=true, kwargs...)
+    if isempty(lattice)
+        @warn "Empty lattice — nothing to visualize"
+        return
+    end
+
     defaultargs = (
         curves=false,
         curvature_scalar=0.2,
