@@ -1,7 +1,7 @@
 name = "ITensorLattices"
 uuid = "3ef2b461-a4cb-42b1-a580-b83f8df68c40"
 authors = ["Roman Dimov <romanddimov@gmail.com>"]
-version = "2.0.0"
+version = "1.0.0"
 
 [deps]
 GraphRecipes = "bd48cda9-67a9-57be-86fa-5b3c104eda73"
