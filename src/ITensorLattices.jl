@@ -1,11 +1,12 @@
 
 module ITensorLattices
 
-    using Graphs
     using GraphRecipes
+    using Graphs
     using ITensors
-    using LinearAlgebra
+    using Parameters
     using Plots
+    using LinearAlgebra
 
     include("graphs.jl")
     include("lattices.jl")

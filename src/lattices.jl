@@ -1,6 +1,16 @@
 
-export build_graph, build_lattice, get_coords, build_chain_lattice,
-    build_triangular_lattice, build_square_lattice, build_honeycomb_lattice
+export build_graph, build_lattice, get_coords, nsites
+export LatticeParams, ChainLatticeParams, TriangularLatticeParams, SquareLatticeParams, HoneycombLatticeParams
+
+"""
+Aliases
+"""
+nsites = nnodes
+const LatticeParams = GraphParams
+const ChainLatticeParams = ChainGraphParams
+const TriangularLatticeParams = TriangularGraphParams
+const SquareLatticeParams = SquareGraphParams
+const HoneycombLatticeParams = HoneycombGraphParams
 
 """
 Build graph from lattice. This can be useful for analyzing the bond structure
@@ -13,8 +23,6 @@ end
 
 """
 Build ITensor Lattice from undirected graph
-
-TODO: handle xy coordinates
 """
 function build_lattice(graph::Graph, coords::Union{Vector{<:Coord}, Nothing}=nothing)::Lattice
     @assert !is_directed(graph) "Graph must be undirected"
@@ -54,33 +62,8 @@ function get_coords(lattice::Lattice)::Vector{Coord}
     return coordlist
 end
 
-############################################################################################
-### Lattices
-############################################################################################
-
-function build_chain_lattice(n::Int; periodic = false, neighbor = 1)
-    g, coords = build_chain_graph(n; periodic)
-    graph = get_neighbor_graph(g, neighbor)
-    return build_lattice(graph, coords)
-end
-
-function build_triangular_lattice(nx::Int, ny::Int; yperiodic::Bool=false, neighbor::Int=1)::Lattice
-    g, coords = build_triangular_graph(nx, ny; yperiodic)
-    graph = get_neighbor_graph(g, neighbor)
-    return build_lattice(graph, coords)
-end
-
-function build_square_lattice(nx::Int, ny::Int; yperiodic::Bool=false, neighbor::Int=1)::Lattice
-    g, coords = build_square_graph(nx, ny; yperiodic)
-    graph = get_neighbor_graph(g, neighbor)
-    return build_lattice(graph, coords)
-end
-
-"""
-armchair configuration
-"""
-function build_honeycomb_lattice(nx::Int, ny::Int; yperiodic::Bool=false, neighbor::Int=1)::Lattice
-    g, coords = build_honeycomb_graph(nx, ny; yperiodic)
-    graph = get_neighbor_graph(g, neighbor)
-    return build_lattice(graph, coords)
+function build_lattice(params::LatticeParams; neighbor::Int=1)
+    graph, coords = build_graph(params)
+    neighbor_graph = get_neighbor_graph(graph, neighbor)
+    return build_lattice(neighbor_graph, coords)
 end
